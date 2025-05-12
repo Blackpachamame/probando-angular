@@ -1,77 +1,84 @@
-<h3>Add a Hero!</h3>
+<h3 class="text-center">Add a Hero!</h3>
 
 <div>
-  <h4 class="error">{{ message }}</h4>
-  <form (ngSubmit)="addHero()" [formGroup]="heroForm">
-    <div class="row">
-      <div class="column">
-        <div class="input-group">
-          <label for="name">Name: </label>
-          <input type="text" id="name" name="name" placeholder="Name" required formControlName="name"
-            [attr.aria-invalid]="heroForm.get('name')?.invalid" aria-describedby="name-error" />
-          @if(this.heroForm.get('name')?.dirty || this.message &&
-          this.heroForm.get('name')?.invalid){
-          <div class="error" id="name-error" role="alert">
-            @if(this.heroForm.get('name')?.getError('heroNameValid')){
-            <div>* Hero name must be a valid name</div>
-            }
-            @if(this.heroForm.get('name')?.getError('required')){
-            <div>* Hero name is required</div>
-            }
-          </div>
+  <h4 class="text-red-500">{{ message }}</h4>
+  <form class="flex flex-col bg-amber-100 p-4" (ngSubmit)="addHero()" [formGroup]="heroForm">
+    <div class="flex">
+      <div class="flex flex-col p-4">
+        <div class="flex mb-4">
+          <label for="name" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">Name: </label>
+          <input type="text" id="name" name="name" class="min-w-[65%] p-2 mb-4" placeholder="Name" required
+            formControlName="name" [attr.aria-invalid]="heroForm.get('name')?.invalid" aria-describedby="name-error" />
+        </div>
+
+        @if(this.heroForm.get('name')?.dirty || this.message && this.heroForm.get('name')?.invalid){
+        <div class="text-red-500" id="name-error" role="alert">
+          @if(this.heroForm.get('name')?.getError('heroNameValid')){
+          <div class="leading-3 pb-4 ml-6">* Hero name must be a valid name</div>
+          }
+          @if(this.heroForm.get('name')?.getError('required')){
+          <div class="leading-3 pb-4 ml-6">* Hero name is required</div>
           }
         </div>
+        }
 
         <div formGroupName="powerstats">
           @for(powerstat of powerstats; track powerstat){
-          <div class="input-group">
-            <label [for]="powerstat">{{powerstat | titlecase}}: </label>
-            <input type="number" [id]="powerstat" [name]="powerstat" [placeholder]="powerstat | titlecase"
-              [formControlName]="powerstat" [attr.aria-invalid]="heroForm.get('powerstats')?.get(powerstat)?.invalid"
+          <div class="flex mb-4">
+            <label [for]="powerstat" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">{{ powerstat |
+              titlecase }}:</label>
+            <input type="number" [id]="powerstat" [name]="powerstat" class="min-w-[65%] p-2 mb-4"
+              [placeholder]="powerstat | titlecase" [formControlName]="powerstat"
+              [attr.aria-invalid]="heroForm.get('powerstats')?.get(powerstat)?.invalid"
               [attr.aria-describedby]="powerstat + '-error'" />
-            @if(this.heroForm.get('powerstats')?.get(powerstat)?.dirty &&
-            this.heroForm.get('powerstats')?.get(powerstat)?.invalid){
-            <div class="error" [id]="powerstat + '-error'" role="alert">
-              @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('required')){
-              <span>* {{powerstat | titlecase}} is required</span>
-              }
-              @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('min') ||
-              this.heroForm.get('powerstats')?.get(powerstat)?.getError('max')){
-              <span>* {{powerstat | titlecase}} must be a value between 0 and 100</span>
-              }
-            </div>
+          </div>
+
+          @if(this.heroForm.get('powerstats')?.get(powerstat)?.dirty &&
+          this.heroForm.get('powerstats')?.get(powerstat)?.invalid){
+          <div class="text-red-500" [id]="powerstat + '-error'" role="alert">
+            @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('required')){
+            <span class="leading-3 pb-4 ml-6">* {{ powerstat | titlecase }} is required</span>
+            }
+            @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('min') ||
+            this.heroForm.get('powerstats')?.get(powerstat)?.getError('max')){
+            <span class="leading-3 pb-4 ml-6">* {{ powerstat | titlecase }} must be a value between 0 and 100</span>
             }
           </div>
           }
+          }
         </div>
 
-        <div class="input-group">
-          <label for="image">Image: </label>
-          <select id="image" formControlName="image">
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/370-joker.jpg">
-              Joker</option>
+        <div class="flex mb-4">
+          <label for="image" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">Image:</label>
+          <select id="image" class="min-w-[65%] p-2 mb-4" formControlName="image">
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/370-joker.jpg">Joker
+            </option>
             <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/87-bionic-woman.jpg">
               Bionic Woman</option>
             <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/165-catwoman.jpg">Cat
               Woman</option>
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/332-hulk.jpg"> Hulk
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/332-hulk.jpg">Hulk
             </option>
             <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/644-superman.jpg">
               Superman</option>
           </select>
         </div>
 
-        <div class="input-group">
-          <label for="alignment">Alignment: </label>
-          <select id="alignment" formControlName="alignment">
+        <div class="flex mb-4">
+          <label for="alignment" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">Alignment:</label>
+          <select id="alignment" class="min-w-[65%] p-2 mb-4" formControlName="alignment">
             <option value="good">Good</option>
             <option value="bad">Bad</option>
           </select>
         </div>
       </div>
     </div>
-    <div class="row">
-      <button [disabled]="heroForm.invalid">Create</button>
+
+    <div class="flex">
+      <button type="submit" [disabled]="heroForm.invalid"
+        class="p-4 bg-gray-600 text-white border-none cursor-pointer disabled:opacity-50">
+        Create
+      </button>
     </div>
   </form>
 </div>

@@ -14,7 +14,6 @@ import { TitleCasePipe } from '@angular/common';
   selector: 'app-hero-new',
   imports: [ReactiveFormsModule, TitleCasePipe],
   templateUrl: './hero-new.component.html',
-  styleUrl: './hero-new.component.css',
 })
 export class HeroNewComponent {
   add = output<Hero>();
