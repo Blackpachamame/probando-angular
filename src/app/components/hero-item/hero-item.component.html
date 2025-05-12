@@ -33,5 +33,16 @@
       </div>
     </div>
     }
+
+    <hr class="m-4 border-amber-600" />
+
+    <div class="flex justify-center gap-2">
+      <span
+        class="w-20 no-underline bg-white text-black border-2 border-emerald-600 text-lg font-bold font-sans leading-4 py-1 px-1.5 hover:bg-emerald-600 hover:text-white cursor-pointer"
+        [routerLink]="['/hero', 'update', hero().id]">Update</span>
+      <span
+        class="w-20 no-underline bg-white text-black border-2 border-blue-400 text-lg font-bold font-sans leading-4 py-1 px-1.5 hover:bg-blue-400 hover:text-white cursor-pointer"
+        [routerLink]="['/hero', hero().id]">View</span>
+    </div>
   </div>
 </div>

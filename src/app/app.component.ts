@@ -1,26 +1,19 @@
-import { Component, inject } from '@angular/core';
-import { HeroListComponent } from './components/hero-list/hero-list.component';
-import { HeroNewComponent } from './components/hero-new/hero-new.component';
-import { Hero } from './shared/interfaces/hero.interface';
-import { HeroService } from './shared/services/hero.service';
+import { Component } from '@angular/core';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    HeroListComponent,
-    HeroNewComponent,
-    HeaderComponent,
-    FooterComponent,
-  ],
-  templateUrl: './app.component.html',
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  template: `
+    <div
+      class="grid min-h-screen grid-rows-[auto_1fr_auto] justify-between mx-auto"
+    >
+      <app-header class="col-span-3" />
+      <router-outlet />
+      <app-footer class="col-span-3" />
+    </div>
+  `,
 })
-export class AppComponent {
-  readonly #heroService = inject(HeroService);
-  heroes = this.#heroService.findAll();
-
-  addHero(hero: Hero) {
-    this.#heroService.add(hero);
-  }
-}
+export class AppComponent {}

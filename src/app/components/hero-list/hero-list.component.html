@@ -1,4 +1,4 @@
-<div class="flex flex-wrap gap-4">
+<div class="flex flex-wrap justify-center gap-4 px-2 py-4">
   @for (hero of heroes(); track hero.id) {
   <app-hero-item [hero]="hero" (powerstatsChange)="savePowerstats($event)" />
   } @empty {
