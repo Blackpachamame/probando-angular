@@ -31,6 +31,7 @@ export const routes: Routes = [
           import('./pages/hero/hero-detail/hero-detail.component').then(
             (c) => c.HeroDetailComponent
           ),
+        resolve: { hero: heroResolver },
       },
     ],
   },
