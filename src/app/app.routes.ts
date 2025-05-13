@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { heroResolver } from './shared/guards/hero.resolver';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
           import('./pages/hero/hero-update/hero-update.component').then(
             (c) => c.HeroUpdateComponent
           ),
+        resolve: { hero: heroResolver },
       },
       {
         path: ':id',

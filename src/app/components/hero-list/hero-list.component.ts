@@ -10,10 +10,13 @@ import { HeroService } from '../../shared/services/hero.service';
   templateUrl: './hero-list.component.html',
 })
 export class HeroListComponent {
-  public heroes = input.required<Hero[]>();
   readonly #heroService = inject(HeroService);
+  public heroes = input.required<Hero[]>();
 
   savePowerstats({ hero, powerstat, value }: HeroPowerstatsChange) {
-    this.#heroService.update(hero, powerstat, value);
+    this.#heroService.updatePowerstat(hero, powerstat, value);
+  }
+  removeHero(hero: Hero) {
+    this.#heroService.remove(hero);
   }
 }

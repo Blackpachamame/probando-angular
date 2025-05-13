@@ -43,6 +43,10 @@
       <span
         class="w-20 no-underline bg-white text-black border-2 border-blue-400 text-lg font-bold font-sans leading-4 py-1 px-1.5 hover:bg-blue-400 hover:text-white cursor-pointer"
         [routerLink]="['/hero', hero().id]">View</span>
+      <span
+        class="w-20 no-underline bg-white text-black border-2 border-red-400 text-lg font-bold font-sans leading-4 py-1 px-1.5 hover:bg-red-400 hover:text-white cursor-pointer"
+        (click)="remove(hero())">Delete
+      </span>
     </div>
   </div>
 </div>

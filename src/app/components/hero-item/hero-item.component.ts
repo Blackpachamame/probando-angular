@@ -11,8 +11,9 @@ import { RouterLink } from '@angular/router';
 })
 export class HeroItemComponent {
   hero = input.required<Hero>();
+  readonly = input<boolean>(false);
   powerstatsChange = output<HeroPowerstatsChange>();
-
+  removeHero = output<Hero>();
   isHeroVillain = computed(() => this.hero().alignment === 'bad');
 
   decrementPowerStats(powerstat: PowerStat): void {
@@ -21,5 +22,8 @@ export class HeroItemComponent {
 
   incrementPowerStats(powerstat: PowerStat): void {
     this.powerstatsChange.emit({ hero: this.hero(), powerstat, value: 1 });
+  }
+  remove(hero: Hero) {
+    this.removeHero.emit(hero);
   }
 }

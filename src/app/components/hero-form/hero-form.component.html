@@ -1,20 +1,21 @@
 <div>
   <h4 class="text-red-500">{{ message }}</h4>
-  <form class="flex flex-col bg-amber-100 p-4" (ngSubmit)="addHero()" [formGroup]="heroForm">
+  <form class="flex flex-col bg-amber-100 p-4" (ngSubmit)="saveHero()" [formGroup]="heroForm()">
     <div class="flex">
       <div class="flex flex-col p-4">
         <div class="flex mb-4">
           <label for="name" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">Name: </label>
           <input type="text" id="name" name="name" class="min-w-[65%] p-2 mb-4 bg-white" placeholder="Name" required
-            formControlName="name" [attr.aria-invalid]="heroForm.get('name')?.invalid" aria-describedby="name-error" />
+            formControlName="name" [attr.aria-invalid]="heroForm().get('name')?.invalid"
+            aria-describedby="name-error" />
         </div>
 
-        @if(this.heroForm.get('name')?.dirty || this.message && this.heroForm.get('name')?.invalid){
+        @if(this.heroForm().get('name')?.dirty || this.message && this.heroForm().get('name')?.invalid){
         <div class="text-red-500" id="name-error" role="alert">
-          @if(this.heroForm.get('name')?.getError('heroNameValid')){
+          @if(this.heroForm().get('name')?.getError('heroNameValid')){
           <div class="leading-3 pb-4 ml-6">* Hero name must be a valid name</div>
           }
-          @if(this.heroForm.get('name')?.getError('required')){
+          @if(this.heroForm().get('name')?.getError('required')){
           <div class="leading-3 pb-4 ml-6">* Hero name is required</div>
           }
         </div>
@@ -27,18 +28,18 @@
               titlecase }}:</label>
             <input type="number" [id]="powerstat" [name]="powerstat" class="min-w-[65%] p-2 mb-4 bg-white"
               [placeholder]="powerstat | titlecase" [formControlName]="powerstat"
-              [attr.aria-invalid]="heroForm.get('powerstats')?.get(powerstat)?.invalid"
+              [attr.aria-invalid]="heroForm().get('powerstats')?.get(powerstat)?.invalid"
               [attr.aria-describedby]="powerstat + '-error'" />
           </div>
 
-          @if(this.heroForm.get('powerstats')?.get(powerstat)?.dirty &&
-          this.heroForm.get('powerstats')?.get(powerstat)?.invalid){
+          @if(this.heroForm().get('powerstats')?.get(powerstat)?.dirty &&
+          this.heroForm().get('powerstats')?.get(powerstat)?.invalid){
           <div class="text-red-500" [id]="powerstat + '-error'" role="alert">
-            @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('required')){
+            @if(this.heroForm().get('powerstats')?.get(powerstat)?.getError('required')){
             <span class="leading-3 pb-4 ml-6">* {{ powerstat | titlecase }} is required</span>
             }
-            @if(this.heroForm.get('powerstats')?.get(powerstat)?.getError('min') ||
-            this.heroForm.get('powerstats')?.get(powerstat)?.getError('max')){
+            @if(this.heroForm().get('powerstats')?.get(powerstat)?.getError('min') ||
+            this.heroForm().get('powerstats')?.get(powerstat)?.getError('max')){
             <span class="leading-3 pb-4 ml-6">* {{ powerstat | titlecase }} must be a value between 0 and 100</span>
             }
           </div>
@@ -49,15 +50,15 @@
         <div class="flex mb-4">
           <label for="image" class="mr-4 px-2 py-0 min-w-[35%] font-bold text-[1.25rem]">Image:</label>
           <select id="image" class="min-w-[65%] p-2 mb-4 bg-white" formControlName="image">
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/370-joker.jpg">Joker
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/370-joker.jpg">Joker
             </option>
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/87-bionic-woman.jpg">
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/87-bionic-woman.jpg">
               Bionic Woman</option>
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/165-catwoman.jpg">Cat
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/165-catwoman.jpg">Cat
               Woman</option>
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/332-hulk.jpg">Hulk
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/332-hulk.jpg">Hulk
             </option>
-            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/sm/644-superman.jpg">
+            <option value="https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/md/644-superman.jpg">
               Superman</option>
           </select>
         </div>
@@ -73,9 +74,9 @@
     </div>
 
     <div class="flex">
-      <button type="submit" [disabled]="heroForm.invalid"
+      <button type="submit" [disabled]="heroForm().invalid"
         class="p-4 bg-gray-600 text-white border-none cursor-pointer disabled:opacity-50">
-        Create
+        {{ textButton() }}
       </button>
     </div>
   </form>
