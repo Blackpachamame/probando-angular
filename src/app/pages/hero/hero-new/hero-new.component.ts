@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { HeroFormComponent } from '../../../components/hero-form/hero-form.component';
 import { Router } from '@angular/router';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { HeroService } from '../../../shared/services/hero.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hero-new',
@@ -15,6 +16,7 @@ import { HeroService } from '../../../shared/services/hero.service';
 export class HeroNewComponent {
   readonly #heroService = inject(HeroService);
   readonly #router = inject(Router);
+  readonly #destroyRef = inject(DestroyRef);
 
   addHero(_hero: Hero) {
     const hero: Hero = {
@@ -22,7 +24,14 @@ export class HeroNewComponent {
       id: Math.floor(Math.random() * 1000) + 1,
     };
     console.log('Creating Hero', hero);
-    this.#heroService.add(hero);
+    this.#heroService
+      .add(hero)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (hero) => console.log('Hero created', hero),
+        error: (error) => console.error('Failed to create hero', error),
+        complete: () => console.log('Hero creation complete'),
+      });
     this.#router.navigate(['/home']);
   }
 }

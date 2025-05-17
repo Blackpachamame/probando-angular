@@ -1,22 +1,51 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
 import { HeroItemComponent } from '../hero-item/hero-item.component';
 import { Hero } from '../../shared/interfaces/hero.interface';
 import { HeroPowerstatsChange } from '../../shared/interfaces/hero-powerstats-change';
 import { HeroService } from '../../shared/services/hero.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hero-list',
   imports: [HeroItemComponent],
-  templateUrl: './hero-list.component.html',
+  template: `
+    <div class="flex flex-wrap justify-center gap-4 px-2 py-4 ">
+      @for (hero of heroes(); track hero.id) {
+      <app-hero-item
+        [hero]="hero"
+        (powerstatsChange)="savePowerstats($event)"
+        (removeHero)="removeHero($event)"
+      />
+      } @empty {
+      <h1 aria-hidden="true">There are no Heroes.</h1>
+      }
+    </div>
+  `,
 })
 export class HeroListComponent {
   readonly #heroService = inject(HeroService);
+  readonly #destroyRef = inject(DestroyRef);
   public heroes = input.required<Hero[]>();
 
   savePowerstats({ hero, powerstat, value }: HeroPowerstatsChange) {
-    this.#heroService.updatePowerstat(hero, powerstat, value);
+    this.#heroService
+      .updatePowerstat(hero, powerstat, value)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => console.log('Powerstat updated'),
+        error: (error) => console.error('Failed to update powerstat', error),
+        complete: () => console.log('Powerstat update complete'),
+      });
   }
   removeHero(hero: Hero) {
-    this.#heroService.remove(hero);
+    this.#heroService
+      .remove(hero)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        // Warning: Doesn't refresh heroes (input Signal) because it's only for reading.
+        next: () => console.log('Hero removed'),
+        error: (error) => console.error('Failed to remove hero', error),
+        complete: () => console.log('Hero removed complete'),
+      });
   }
 }

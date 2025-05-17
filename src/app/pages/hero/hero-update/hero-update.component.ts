@@ -1,9 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { HeroFormComponent } from '../../../components/hero-form/hero-form.component';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeroService } from '../../../shared/services/hero.service';
 import { HeroItemNotFoundComponent } from '../../../components/hero-item-not-found/hero-item-not-found.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-hero-update',
@@ -24,13 +25,21 @@ export class HeroUpdateComponent {
   readonly #router = inject(Router);
   readonly #activatedRoute = inject(ActivatedRoute);
   readonly #heroService = inject(HeroService);
+  readonly #destroyRef = inject(DestroyRef);
 
   hero: Hero = this.#activatedRoute.snapshot.data['hero'];
   isValidHero = computed(() => !this.#heroService.isNullHero(this.hero));
 
   updateHero(hero: Hero) {
     console.log('Updating Hero', hero);
-    this.#heroService.update(hero);
-    this.#router.navigate(['/home']);
+    this.#heroService
+      .update(hero)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => this.#router.navigate(['/home']),
+        error: (error) => {
+          alert('Failed to update hero' + error);
+        },
+      });
   }
 }
