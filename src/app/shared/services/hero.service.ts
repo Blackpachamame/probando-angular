@@ -8,8 +8,8 @@ import { catchError, Observable, of, tap, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class HeroService extends HeroServiceAbstract {
-  readonly #heroesSignal = signal(<Hero[]>[]);
-  readonly heroes = computed(() => this.#heroesSignal);
+  readonly #heroesSignal = signal<Hero[]>([]);
+  readonly heroes = computed(() => this.#heroesSignal());
 
   readonly #httpClient = inject(HttpClient);
 

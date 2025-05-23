@@ -8,19 +8,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [HeroListComponent],
   template: `
     @if(heroes()){
-    <app-hero-list [heroes]="heroes" />
+    <app-hero-list [heroes]="heroes()" />
     }
   `,
 })
 export class HomeComponent {
   readonly #heroService = inject(HeroService);
-  readonly #destroyRef = inject(DestroyRef);
-  heroes = this.#heroService.heroes;
+  readonly heroes = this.#heroService.heroes;
 
-  constructor() {
+  constructor(private destroyRef: DestroyRef) {
     this.#heroService
       .load()
-      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 }
