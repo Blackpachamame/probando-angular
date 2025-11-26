@@ -1,9 +1,17 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  ResourceStatus,
+  signal,
+} from '@angular/core';
 import { HeroFormComponent } from '../../../components/hero-form/hero-form.component';
 import { Router } from '@angular/router';
 import { Hero } from '../../../shared/interfaces/hero.interface';
 import { HeroService } from '../../../shared/services/hero.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { NEVER } from 'rxjs';
 
 @Component({
   selector: 'app-hero-new',
@@ -16,7 +24,36 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class HeroNewComponent {
   readonly #heroService = inject(HeroService);
   readonly #router = inject(Router);
-  readonly #destroyRef = inject(DestroyRef);
+  readonly heroSignal = signal<Hero>(this.#heroService.defaultHero);
+  readonly #heroResource = rxResource({
+    request: () => this.heroSignal(),
+    loader: ({ request: hero }) =>
+      this.#heroService.isDefaultHero(hero)
+        ? NEVER
+        : this.#heroService.add(hero),
+    equal: (hero1, hero2) => hero1.id === hero2.id,
+  });
+
+  isLoading = this.#heroResource.isLoading;
+  error = this.#heroResource.error;
+  isHeroResouceCompleted = computed(
+    () => this.#heroResource.status() === ResourceStatus.Resolved
+  );
+
+  navigateEffect = effect(() => {
+    if (
+      !this.#heroService.isDefaultHero(this.heroSignal()) &&
+      this.isHeroResouceCompleted()
+    ) {
+      this.#router.navigate(['/home']);
+    }
+  });
+
+  errorEffect = effect(() => {
+    if (this.error()) {
+      console.log('Error', this.error());
+    }
+  });
 
   addHero(_hero: Hero) {
     const hero: Hero = {
@@ -24,14 +61,6 @@ export class HeroNewComponent {
       id: Math.floor(Math.random() * 1000) + 1,
     };
     console.log('Creating Hero', hero);
-    this.#heroService
-      .add(hero)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (hero) => console.log('Hero created', hero),
-        error: (error) => console.error('Failed to create hero', error),
-        complete: () => console.log('Hero creation complete'),
-      });
-    this.#router.navigate(['/home']);
+    this.heroSignal.set(hero);
   }
 }
